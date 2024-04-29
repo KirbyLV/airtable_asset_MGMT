@@ -78,4 +78,4 @@ Just Click on _GUI.py and it should do the rest! All Fields must be filled out t
 
 THIS IS A WORK IN PROGRESS!
 
-All back end by Andy Philpo. I jsut made the front end UI.
+All back end by Andy Philpo. Front end by Josh Spodick.

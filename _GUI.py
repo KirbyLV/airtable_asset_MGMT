@@ -1,3 +1,4 @@
+#region imports
 import subprocess
 import sys
 
@@ -13,18 +14,32 @@ import json
 from Dropbox_Token_Despenser import DropboxTokenDespenserGUI
 from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
 import customtkinter
+#endregion
 
+#region window setup
 #Set basic appearance settings
 customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("dark-blue")
 
 root = customtkinter.CTk()
-root.geometry("720x480")
+#root.geometry("720x480")
+root.minsize(width=720, height=540)
 root.title("Content MGMT")
 
-frame = customtkinter.CTkFrame(master=root)
-frame.pack(padx=60, pady = 20, fill="both", expand=True)
+headerFrame = customtkinter.CTkFrame(master=root)
+headerFrame.grid(row = 0, column = 0, padx = 10, pady = 10, sticky = "NEW")
 
+frame = customtkinter.CTkFrame(master=root)
+frame.grid(row = 1, column = 0, padx = 10, pady = 10, sticky = "NSEW")
+
+execFrame = customtkinter.CTkFrame(master=root)
+execFrame.grid(row = 2, column = 0, padx = 10, pady = 10, sticky = "NSEW")
+
+footerFrame = customtkinter.CTkFrame(master=root)
+footerFrame.grid(row = 3, column = 0, padx = 10, pady = 10, sticky = "SEW")
+#endregion
+
+#region initial setup, variables, and structure
 #Define user variables
 cont_dir = tkinter.StringVar()
 thumbnail_dir = tkinter.StringVar()
@@ -55,7 +70,9 @@ defaultsSettings = data = '''
 '''
 defaults =json.loads(defaultsSettings)
 settingsPath = 'secrets.json'
+#endregion
 
+#region functions
 #Define functions
 def saveConf():
     defaults['CONTENT_SOURCE'] = cont_dir.get().strip()
@@ -118,20 +135,33 @@ def loadExistingJson():
     existingData = json.load(f)
     f.close()
     try:
-        contentEntry.configure(placeholder_text = existingData['CONTENT_SOURCE'])
-        thumbnailEntry.configure(placeholder_text = existingData['THUMB_DEPOT'])
-        dbPathEntry.configure(placeholder_text = existingData['THUMB_DB_PATH'])
-        airtableTokenEntry.configure(placeholder_text = existingData['AIRTABLE_API_KEY'])
-        airtableBaseEntry.configure(placeholder_text = existingData['AIRTABLE_BASE_KEY'])
-        airtableTblEntry.configure(placeholder_text = existingData['AIRTABLE_TABLE_NAME'])
-        dbAppKeyEntry.configure(placeholder_text = existingData['DROPBOX_KEY'])
-        dbSecretEntry.configure(placeholder_text = existingData['DROPBOX_SECRET'])
-        dbRefreshEntry.configure(placeholder_text = existingData['REFRESH_KEY'])
+        cont_dir.set(existingData['CONTENT_SOURCE'])
+        thumbnail_dir.set(existingData['THUMB_DEPOT'])
+        db_thumb_dir.set(existingData['THUMB_DB_PATH'])
+        airtable_token.set(existingData['AIRTABLE_API_KEY'])
+        airtable_base_key.set(existingData['AIRTABLE_BASE_KEY'])
+        airtable_table_key.set(existingData['AIRTABLE_TABLE_NAME'])
+        db_app_key.set(existingData['DROPBOX_KEY'])
+        db_secret.set(existingData['DROPBOX_SECRET'])
+        db_refresh_key.set(existingData['REFRESH_KEY'])
     except Exception as e :
         print("Cannot Load Existing Settings.", e)
 
+def cont_browse_button():
+    foldername = customtkinter.filedialog.askdirectory()
+    cont_dir.set(foldername)
+    return foldername
+
+def thumb_browse_button():
+    foldername = customtkinter.filedialog.askdirectory()
+    thumbnail_dir.set(foldername)
+    return foldername
+
+#endregion
+
+#region Labels
 # Create Labels
-headerLabel = customtkinter.CTkLabel(master=root, text="Content MGMT by Andy Philpo", font=("Roboto", 24))
+headerLabel = customtkinter.CTkLabel(master=headerFrame, text="Content MGMT", font=("Roboto", 24))
 contentLabel = customtkinter.CTkLabel(master=frame, text="Content Directory: ", font=("Roboto", 16))
 thumbnalLabel = customtkinter.CTkLabel(master=frame, text="Thumbnail Output Directory: ", font=("Roboto", 16))
 dbPathLabel = customtkinter.CTkLabel(master=frame, text="Dropbox Relative Thumbnail Path: ", font=("Roboto", 16))
@@ -141,7 +171,7 @@ airtableTblLabel = customtkinter.CTkLabel(master=frame, text="Airtable Table Key
 dbAppKeyLabel = customtkinter.CTkLabel(master=frame, text="Dropbox App Key: ", font=("Roboto", 16))
 dbSecretLabel = customtkinter.CTkLabel(master=frame, text="Dropbox App Secret: ", font=("Roboto", 16))
 dbRefreshLabel = customtkinter.CTkLabel(master=frame, text="Dropbox Refresh Token: ", font=("Roboto", 16))
-
+footerLabel = customtkinter.CTkLabel(master=footerFrame, text="Andy Philpo, Josh Spodick, Grant McDonald, Drew Winston", font=("Roboto", 10, "italic"))
 
 # Set labels on screen
 headerLabel.pack(padx = 20, pady = 10, anchor="n")
@@ -154,38 +184,48 @@ airtableTblLabel.grid(row= 6, column= 0, sticky= "e")
 dbAppKeyLabel.grid(row= 7, column= 0, sticky = "e")
 dbSecretLabel.grid(row= 8, column= 0, sticky = "e")
 dbRefreshLabel.grid(row= 12, column= 0, sticky = "e")
+footerLabel.pack(padx = 0, pady = 10, anchor = "s")
 
+#endregion
+
+#region Entries
 #Create text fields
-contentEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Content Directory", width = 200, textvariable = cont_dir)
-thumbnailEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Thumbnail Directory", width = 200, textvariable = thumbnail_dir)
-dbPathEntry = customtkinter.CTkEntry(master=frame, placeholder_text="path relative to DB folder, remove last slash", width = 200, textvariable = db_thumb_dir)
-airtableTokenEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Airtable Token", width = 200, textvariable = airtable_token)
-airtableBaseEntry = customtkinter.CTkEntry(master=frame, placeholder_text="app...", width= 200, textvariable = airtable_base_key)
-airtableTblEntry = customtkinter.CTkEntry(master=frame, placeholder_text="tbl...", width= 200, textvariable= airtable_table_key)
-dbAppKeyEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox App Key", width = 200, textvariable = db_app_key)
-dbSecretEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Secret", width = 200, textvariable = db_secret)
-dbRefreshEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Refresh Token", width=200, textvariable= db_refresh_key)
+contentEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Content Directory", width = 300, textvariable = cont_dir)
+thumbnailEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Thumbnail Directory", width = 300, textvariable = thumbnail_dir)
+dbPathEntry = customtkinter.CTkEntry(master=frame, placeholder_text="path relative to DB folder, remove last slash", width = 300, textvariable = db_thumb_dir)
+airtableTokenEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Airtable Token", width = 300, textvariable = airtable_token)
+airtableBaseEntry = customtkinter.CTkEntry(master=frame, placeholder_text="app...", width= 300, textvariable = airtable_base_key)
+airtableTblEntry = customtkinter.CTkEntry(master=frame, placeholder_text="tbl...", width= 300, textvariable= airtable_table_key)
+dbAppKeyEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox App Key", width = 300, textvariable = db_app_key)
+dbSecretEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Secret", width = 300, textvariable = db_secret)
+dbRefreshEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Refresh Token", width=300, textvariable= db_refresh_key)
 
+#Folder Browser for content and thumbnail directories
+dirButton1 = customtkinter.CTkButton(master=frame, text="Browse", command= cont_browse_button, width=40)
+dirButton1.grid(row = 1, column = 2)
+
+dirButton2 = customtkinter.CTkButton(master=frame, text="Browse", command= thumb_browse_button, width=40)
+dirButton2.grid(row=2, column=2)
 
 #Set entries on screen
-contentEntry.grid(row = 1, column = 1)
-thumbnailEntry.grid(row = 2, column = 1)
-dbPathEntry.grid(row = 3, column = 1)
-airtableTokenEntry.grid(row = 4, column = 1)
-airtableBaseEntry.grid(row = 5, column = 1)
-airtableTblEntry.grid(row = 6, column = 1)
-dbAppKeyEntry.grid(row = 7, column = 1)
-dbSecretEntry.grid(row = 8, column = 1)
-dbRefreshEntry.grid(row = 12, column = 1)
+contentEntry.grid(row = 1, column = 1, sticky = "w")
+thumbnailEntry.grid(row = 2, column = 1, sticky = "w")
+dbPathEntry.grid(row = 3, column = 1, sticky = "w")
+airtableTokenEntry.grid(row = 4, column = 1, sticky = "w")
+airtableBaseEntry.grid(row = 5, column = 1, sticky = "w")
+airtableTblEntry.grid(row = 6, column = 1, sticky = "w")
+dbAppKeyEntry.grid(row = 7, column = 1, sticky = "w")
+dbSecretEntry.grid(row = 8, column = 1, sticky = "w")
+dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10)
 
+#endregion
+
+#region Buttons
 #Create Butons
-customtkinter.CTkLabel(master=frame, text="   ").grid(row=9, column=1)
+#customtkinter.CTkLabel(master=frame, text="   ").grid(row=9, column=1)
 
 saveConfButton = customtkinter.CTkButton(master=frame, text='Save Configuration', width=140, height=28, command=saveConf)
-saveConfButton.grid(row = 10, column = 1)
-
-runAppButton = customtkinter.CTkButton(master=frame, text="Run App", width=140, height=28, command=runApp)
-runAppButton.grid(row = 14, column = 1)
+saveConfButton.grid(row = 10, column = 1, pady = 10)
 
 dbRefreshButton = customtkinter.CTkButton(master=frame, text="Retrieve Dropbox Refresh Token", width=200, height=28, command=dbGetToken)
 dbRefreshButton.grid(row = 11, column = 1)
@@ -193,8 +233,13 @@ dbRefreshButton.grid(row = 11, column = 1)
 dbStoreRefreshButton = customtkinter.CTkButton(master=frame, text="Store Refresh Token", width=200, height=28, command=storeRefreshToken)
 dbStoreRefreshButton.grid(row = 13, column = 1)
 
-loadExistingButton = customtkinter.CTkButton(master=frame, text="Load Existing Date", width=140, height=28, command=loadExistingJson)
-loadExistingButton.grid(row = 15, column = 1)
+loadExistingButton = customtkinter.CTkButton(master=execFrame, text="Load Existing Data", width=200, height=28, command=loadExistingJson)
+loadExistingButton.grid(row = 0, column = 0, padx = 30, pady = 10, sticky = "E")
+
+runAppButton = customtkinter.CTkButton(master=execFrame, text="Run App", width=200, height=28, command=runApp)
+runAppButton.grid(row = 0, column = 1, padx = 30, pady = 10, sticky = "W")
+
+#endregion
 
 #Run App
 root.mainloop()
