@@ -76,7 +76,7 @@ def saveConf():
     return defaults
 
 def runApp():
-    if platform.system() = 'Darwin':
+    if platform.system() == 'Darwin':
         subprocess.run(['python3', '_MGMT_OSX.py'])
     else:
         subprocess.run(['python', '_MGMT.py'])
