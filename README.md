@@ -74,5 +74,8 @@ Many thank yous to the folks that helped me smooth out the rough edges into slig
 
 HOW TO RUN IT:
 
-Just Click on _MGMT.py and it should do the rest!
-***IF YOU ARE ON A MAC, RUN _MGMT_OSX.py*** It uses a slightly different syntax.
+Just Click on _GUI.py and it should do the rest! All Fields must be filled out to work. 
+
+THIS IS A WORK IN PROGRESS!
+
+All back end by Andy Philpo. I jsut made the front end UI.
