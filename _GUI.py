@@ -16,6 +16,7 @@ from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
 import customtkinter
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Window Setup
 #region window setup
 #Set basic appearance settings
 customtkinter.set_appearance_mode("Dark")
@@ -39,6 +40,7 @@ footerFrame = customtkinter.CTkFrame(master=root)
 footerFrame.grid(row = 3, column = 0, padx = 10, pady = 10, sticky = "SEW")
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Variables Setup
 #region initial setup, variables, and structure
 #Define user variables
 cont_dir = tkinter.StringVar()
@@ -72,8 +74,9 @@ defaults =json.loads(defaultsSettings)
 settingsPath = 'secrets.json'
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Define All Functions
 #region functions
-#Define functions
+
 def saveConf():
     defaults['CONTENT_SOURCE'] = cont_dir.get().strip()
     defaults['THUMB_DEPOT'] = thumbnail_dir.get().strip()
@@ -147,6 +150,7 @@ def loadExistingJson():
     except Exception as e :
         print("Cannot Load Existing Settings.", e)
 
+# ~~~~~~~~~~~~~~~~ Folder Dialog Buttons for Directory Picking
 def cont_browse_button():
     foldername = customtkinter.filedialog.askdirectory()
     cont_dir.set(foldername)
@@ -159,6 +163,7 @@ def thumb_browse_button():
 
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Establish all Labels with CTkinter
 #region Labels
 # Create Labels
 headerLabel = customtkinter.CTkLabel(master=headerFrame, text="Content MGMT", font=("Roboto", 24))
@@ -188,6 +193,7 @@ footerLabel.pack(padx = 0, pady = 10, anchor = "s")
 
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Establish all user interactive text fields with CTkinter
 #region Entries
 #Create text fields
 contentEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Content Directory", width = 300, textvariable = cont_dir)
@@ -208,18 +214,19 @@ dirButton2 = customtkinter.CTkButton(master=frame, text="Browse", command= thumb
 dirButton2.grid(row=2, column=2)
 
 #Set entries on screen
-contentEntry.grid(row = 1, column = 1, sticky = "w")
-thumbnailEntry.grid(row = 2, column = 1, sticky = "w")
-dbPathEntry.grid(row = 3, column = 1, sticky = "w")
-airtableTokenEntry.grid(row = 4, column = 1, sticky = "w")
-airtableBaseEntry.grid(row = 5, column = 1, sticky = "w")
-airtableTblEntry.grid(row = 6, column = 1, sticky = "w")
-dbAppKeyEntry.grid(row = 7, column = 1, sticky = "w")
-dbSecretEntry.grid(row = 8, column = 1, sticky = "w")
-dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10)
+contentEntry.grid(row = 1, column = 1, sticky = "w", columnspan = 1)
+thumbnailEntry.grid(row = 2, column = 1, sticky = "w", columnspan = 1)
+dbPathEntry.grid(row = 3, column = 1, sticky = "w", columnspan = 2)
+airtableTokenEntry.grid(row = 4, column = 1, sticky = "w", columnspan = 2)
+airtableBaseEntry.grid(row = 5, column = 1, sticky = "w", columnspan = 2)
+airtableTblEntry.grid(row = 6, column = 1, sticky = "w", columnspan = 2)
+dbAppKeyEntry.grid(row = 7, column = 1, sticky = "w", columnspan = 2)
+dbSecretEntry.grid(row = 8, column = 1, sticky = "w", columnspan = 2)
+dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10, columnspan = 2)
 
 #endregion
 
+# ~~~~~~~~~~~~~~~~ Establish all Buttons to trigger functions and other sub processes
 #region Buttons
 #Create Butons
 #customtkinter.CTkLabel(master=frame, text="   ").grid(row=9, column=1)
