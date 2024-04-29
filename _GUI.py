@@ -2,6 +2,7 @@ import subprocess
 import sys
 import tkinter
 import os
+import platform
 import json
 from Dropbox_Token_Despenser import DropboxTokenDespenserGUI
 from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
@@ -75,6 +76,10 @@ def saveConf():
     return defaults
 
 def runApp():
+    if platform.system() = 'Darwin':
+        subprocess.run(['python3', '_MGMT_OSX.py'])
+    else:
+        subprocess.run(['python', '_MGMT.py'])
     print("Running Application")
 
 def dbGetToken():
