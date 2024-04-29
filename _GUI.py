@@ -1,17 +1,17 @@
 import subprocess
 import sys
-import tkinter
-import os
-import platform
-import json
-from Dropbox_Token_Despenser import DropboxTokenDespenserGUI
-from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", '-r', package])
 package = 'requirements.txt'
 install(package)
 
+import tkinter
+import os
+import platform
+import json
+from Dropbox_Token_Despenser import DropboxTokenDespenserGUI
+from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
 import customtkinter
 
 #Set basic appearance settings
