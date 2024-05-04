@@ -1,6 +1,7 @@
 #region imports
 import subprocess
 import sys
+import tkinter.messagebox
 
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", '-r', package])
@@ -53,6 +54,7 @@ db_app_key = tkinter.StringVar()
 db_secret = tkinter.StringVar()
 db_refresh_key = tkinter.StringVar()
 
+
 #Define JSON API default structure for dropbox refresh token
 defaultsSettings = data = '''
 {
@@ -87,12 +89,27 @@ def saveConf():
     defaults['AIRTABLE_BASE_KEY'] = airtable_base_key.get().strip()
     defaults['AIRTABLE_TABLE_NAME'] = airtable_table_key.get().strip()
     defaults['AIRTABLE_URL'] = f'https://api.airtable.com/v0/{defaults['AIRTABLE_BASE_KEY']}/{defaults['AIRTABLE_TABLE_NAME']}'
-    #dbRefreshButton.configure()
-
     final = open(settingsPath,'w')
     final.write(json.dumps(defaults))
     final.close()
-    print("Configuration saved")
+    if (
+        len(cont_dir.get()) != 0 and
+        len(thumbnail_dir.get()) != 0 and
+        len(db_thumb_dir.get()) != 0 and
+        len(airtable_token.get()) != 0 and
+        len(airtable_base_key.get()) != 0 and
+        len(airtable_table_key.get()) != 0 and
+        len(db_app_key.get()) != 0 and
+        len(db_secret.get()) != 0 and
+        len(db_refresh_key.get()) != 0
+        ):
+        dbRefreshButton.configure(state='normal')
+        print("Configuration saved")
+        if len(db_refresh_key.get()) != 0:
+            dbStoreRefreshButton.configure(state='normal')
+    else:
+        tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
+        print("Missing some Variables")
     return defaults
 
 def runApp():
@@ -106,6 +123,7 @@ def dbGetToken():
     print("okay")
     try:
         DropboxTokenDespenserGUI(defaults['DROPBOX_KEY'],defaults['DROPBOX_SECRET'])
+        dbStoreRefreshButton.configure(state='normal')
     except Exception as e :
         print("Token Generation Failed!", e)
 
@@ -129,6 +147,21 @@ def storeRefreshToken():
     f = open(settingsPath,'w')
     f.write(json.dumps(defaults))
     f.close()
+    if (
+        len(cont_dir.get()) != 0 and
+        len(thumbnail_dir.get()) != 0 and
+        len(db_thumb_dir.get()) != 0 and
+        len(airtable_token.get()) != 0 and
+        len(airtable_base_key.get()) != 0 and
+        len(airtable_table_key.get()) != 0 and
+        len(db_app_key.get()) != 0 and
+        len(db_secret.get()) != 0 and
+        len(db_refresh_key.get()) != 0
+        ):
+        runAppButton.configure(state='normal')
+    else:
+        tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
+        print("Missing some Variables")
     print("Access Token: ", access_token)
     print("Refresh Token: ", refresh_token)
     print("Refresh Token Saved!")
@@ -147,8 +180,30 @@ def loadExistingJson():
         db_app_key.set(existingData['DROPBOX_KEY'])
         db_secret.set(existingData['DROPBOX_SECRET'])
         db_refresh_key.set(existingData['REFRESH_KEY'])
+        dbRefreshButton.configure(state='normal')
+        if len(db_refresh_key.get()) != 0:
+            dbStoreRefreshButton.configure(state='normal')
     except Exception as e :
         print("Cannot Load Existing Settings.", e)
+    if (
+        len(cont_dir.get()) != 0 and
+        len(thumbnail_dir.get()) != 0 and
+        len(db_thumb_dir.get()) != 0 and
+        len(airtable_token.get()) != 0 and
+        len(airtable_base_key.get()) != 0 and
+        len(airtable_table_key.get()) != 0 and
+        len(db_app_key.get()) != 0 and
+        len(db_secret.get()) != 0 and
+        len(db_refresh_key.get()) != 0
+        ):
+        if len(defaults['DROPBOX_REFRESH_TOKEN']) != 0:
+            runAppButton.configure(state='normal')
+        else:
+            tkinter.messagebox.showwarning(title='Dropbox Access', message='Please Run Store Refresh Token', default='ok')
+    else:
+        tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
+        print("Missing some Variables")
+    
 
 # ~~~~~~~~~~~~~~~~ Folder Dialog Buttons for Directory Picking
 def cont_browse_button():
@@ -234,16 +289,16 @@ dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10, columnspan = 
 saveConfButton = customtkinter.CTkButton(master=frame, text='Save Configuration', width=140, height=28, command=saveConf)
 saveConfButton.grid(row = 10, column = 1, pady = 10)
 
-dbRefreshButton = customtkinter.CTkButton(master=frame, text="Retrieve Dropbox Refresh Token", width=200, height=28, command=dbGetToken)
+dbRefreshButton = customtkinter.CTkButton(master=frame, text="Retrieve Dropbox Refresh Token", width=200, height=28, command=dbGetToken, state="disabled")
 dbRefreshButton.grid(row = 11, column = 1)
 
-dbStoreRefreshButton = customtkinter.CTkButton(master=frame, text="Store Refresh Token", width=200, height=28, command=storeRefreshToken)
+dbStoreRefreshButton = customtkinter.CTkButton(master=frame, text="Store Refresh Token", width=200, height=28, command=storeRefreshToken, state="disabled")
 dbStoreRefreshButton.grid(row = 13, column = 1)
 
 loadExistingButton = customtkinter.CTkButton(master=execFrame, text="Load Existing Data", width=200, height=28, command=loadExistingJson)
 loadExistingButton.grid(row = 0, column = 0, padx = 30, pady = 10, sticky = "E")
 
-runAppButton = customtkinter.CTkButton(master=execFrame, text="Run App", width=200, height=28, command=runApp)
+runAppButton = customtkinter.CTkButton(master=execFrame, text="Run App", width=200, height=28, command=runApp, state="disabled")
 runAppButton.grid(row = 0, column = 1, padx = 30, pady = 10, sticky = "W")
 
 #endregion
