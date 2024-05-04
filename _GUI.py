@@ -100,8 +100,7 @@ def saveConf():
         len(airtable_base_key.get()) != 0 and
         len(airtable_table_key.get()) != 0 and
         len(db_app_key.get()) != 0 and
-        len(db_secret.get()) != 0 and
-        len(db_refresh_key.get()) != 0
+        len(db_secret.get()) != 0
         ):
         dbRefreshButton.configure(state='normal')
         print("Configuration saved")
