@@ -12,8 +12,7 @@ import tkinter
 import os
 import platform
 import json
-from Dropbox_Token_Despenser import DropboxTokenDespenserGUI
-from Dropbox_Token_Despenser import DropboxTokenAuthorizationGUI
+from Dropbox_Dispenser_GUI import DropboxTokenDispenser
 import customtkinter
 #endregion
 
@@ -24,7 +23,6 @@ customtkinter.set_appearance_mode("Dark")
 customtkinter.set_default_color_theme("dark-blue")
 
 root = customtkinter.CTk()
-#root.geometry("720x480")
 root.minsize(width=720, height=540)
 root.title("Content MGMT")
 
@@ -52,8 +50,6 @@ airtable_base_key = tkinter.StringVar()
 airtable_table_key = tkinter.StringVar()
 db_app_key = tkinter.StringVar()
 db_secret = tkinter.StringVar()
-db_refresh_key = tkinter.StringVar()
-
 
 #Define JSON API default structure for dropbox refresh token
 defaultsSettings = data = '''
@@ -104,8 +100,8 @@ def saveConf():
         ):
         dbRefreshButton.configure(state='normal')
         print("Configuration saved")
-        if len(db_refresh_key.get()) != 0:
-            dbStoreRefreshButton.configure(state='normal')
+        #if len(db_refresh_key.get()) != 0: ##REMOVED when adding pop up functionality to getting refresh token
+            #dbStoreRefreshButton.configure(state='normal')
     else:
         tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
         print("Missing some Variables")
@@ -121,31 +117,29 @@ def runApp():
 def dbGetToken():
     print("okay")
     try:
-        DropboxTokenDespenserGUI(defaults['DROPBOX_KEY'],defaults['DROPBOX_SECRET'])
-        dbStoreRefreshButton.configure(state='normal')
+        access_token, refresh_token = DropboxTokenDispenser(defaults['DROPBOX_KEY'], defaults['DROPBOX_SECRET'])
     except Exception as e :
         print("Token Generation Failed!", e)
-
-def storeRefreshToken():
-    defaults['CONTENT_SOURCE'] = cont_dir.get().strip()
-    defaults['THUMB_DEPOT'] = thumbnail_dir.get().strip()
-    defaults['THUMB_DB_PATH'] = db_thumb_dir.get().strip()
-    defaults['DROPBOX_SECRET'] = db_secret.get().strip()
-    defaults['DROPBOX_KEY'] = db_app_key.get().strip()
-    defaults['AIRTABLE_API_KEY'] = airtable_token.get().strip()
-    defaults['AIRTABLE_BASE_KEY'] = airtable_base_key.get().strip()
-    defaults['AIRTABLE_TABLE_NAME'] = airtable_table_key.get().strip()
-    defaults['AIRTABLE_URL'] = f'https://api.airtable.com/v0/{defaults['AIRTABLE_BASE_KEY']}/{defaults['AIRTABLE_TABLE_NAME']}'
-    defaults['REFRESH_KEY'] = db_refresh_key.get().strip()
-    final = open(settingsPath,'w')
-    final.write(json.dumps(defaults))
-    final.close()
-    access_token, refresh_token = DropboxTokenAuthorizationGUI(defaults['DROPBOX_KEY'],defaults['DROPBOX_SECRET'],defaults['REFRESH_KEY'])
-    defaults['DROPBOX_ACCESS_TOKEN']=access_token
-    defaults['DROPBOX_REFRESH_TOKEN']=refresh_token
-    f = open(settingsPath,'w')
-    f.write(json.dumps(defaults))
-    f.close()
+    if len(access_token) != 0 and len(refresh_token) != 0:
+        defaults['CONTENT_SOURCE'] = cont_dir.get().strip()
+        defaults['THUMB_DEPOT'] = thumbnail_dir.get().strip()
+        defaults['THUMB_DB_PATH'] = db_thumb_dir.get().strip()
+        defaults['DROPBOX_SECRET'] = db_secret.get().strip()
+        defaults['DROPBOX_KEY'] = db_app_key.get().strip()
+        defaults['AIRTABLE_API_KEY'] = airtable_token.get().strip()
+        defaults['AIRTABLE_BASE_KEY'] = airtable_base_key.get().strip()
+        defaults['AIRTABLE_TABLE_NAME'] = airtable_table_key.get().strip()
+        defaults['AIRTABLE_URL'] = f'https://api.airtable.com/v0/{defaults['AIRTABLE_BASE_KEY']}/{defaults['AIRTABLE_TABLE_NAME']}'
+        defaults['DROPBOX_ACCESS_TOKEN'] = access_token
+        defaults['DROPBOX_REFRESH_TOKEN'] = refresh_token
+        final = open(settingsPath,'w')
+        final.write(json.dumps(defaults))
+        final.close()
+        runAppButton.configure(state='normal')
+        return defaults
+    else:
+        print("No Tokens")
+        tkinter.messagebox.showwarning(title="Dropbox Token Failed", message="Dropbox Token Generation Failed!", default="ok")
     if (
         len(cont_dir.get()) != 0 and
         len(thumbnail_dir.get()) != 0 and
@@ -154,8 +148,7 @@ def storeRefreshToken():
         len(airtable_base_key.get()) != 0 and
         len(airtable_table_key.get()) != 0 and
         len(db_app_key.get()) != 0 and
-        len(db_secret.get()) != 0 and
-        len(db_refresh_key.get()) != 0
+        len(db_secret.get()) != 0
         ):
         runAppButton.configure(state='normal')
     else:
@@ -178,12 +171,13 @@ def loadExistingJson():
         airtable_table_key.set(existingData['AIRTABLE_TABLE_NAME'])
         db_app_key.set(existingData['DROPBOX_KEY'])
         db_secret.set(existingData['DROPBOX_SECRET'])
-        db_refresh_key.set(existingData['REFRESH_KEY'])
+        #db_refresh_key.set(existingData['REFRESH_KEY'])
         dbRefreshButton.configure(state='normal')
-        if len(db_refresh_key.get()) != 0:
-            dbStoreRefreshButton.configure(state='normal')
+        #if len(db_refresh_key.get()) != 0:
+            #dbStoreRefreshButton.configure(state='normal')
     except Exception as e :
         print("Cannot Load Existing Settings.", e)
+        tkinter.messagebox.showwarning(title="No Existing Settings", message="No Existing Settings", default="ok")
     if (
         len(cont_dir.get()) != 0 and
         len(thumbnail_dir.get()) != 0 and
@@ -192,13 +186,12 @@ def loadExistingJson():
         len(airtable_base_key.get()) != 0 and
         len(airtable_table_key.get()) != 0 and
         len(db_app_key.get()) != 0 and
-        len(db_secret.get()) != 0 and
-        len(db_refresh_key.get()) != 0
+        len(db_secret.get()) != 0
         ):
-        if len(defaults['DROPBOX_REFRESH_TOKEN']) != 0:
-            runAppButton.configure(state='normal')
-        else:
-            tkinter.messagebox.showwarning(title='Dropbox Access', message='Please Run Store Refresh Token', default='ok')
+        runAppButton.configure(state='normal')
+
+        #else:
+            #tkinter.messagebox.showwarning(title='Dropbox Access', message='Please Run Store Refresh Token', default='ok')
     else:
         tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
         print("Missing some Variables")
@@ -229,7 +222,6 @@ airtableBaseLabel = customtkinter.CTkLabel(master=frame, text="Airtable Base Key
 airtableTblLabel = customtkinter.CTkLabel(master=frame, text="Airtable Table Key (in URL starting with tbl): ", font=("Roboto", 16))
 dbAppKeyLabel = customtkinter.CTkLabel(master=frame, text="Dropbox App Key: ", font=("Roboto", 16))
 dbSecretLabel = customtkinter.CTkLabel(master=frame, text="Dropbox App Secret: ", font=("Roboto", 16))
-dbRefreshLabel = customtkinter.CTkLabel(master=frame, text="Dropbox Refresh Token: ", font=("Roboto", 16))
 footerLabel = customtkinter.CTkLabel(master=footerFrame, text="Andy Philpo, Josh Spodick, Grant McDonald, Drew Winston", font=("Roboto", 10, "italic"))
 
 # Set labels on screen
@@ -242,7 +234,6 @@ airtableBaseLabel.grid(row= 5, column= 0, sticky= "e")
 airtableTblLabel.grid(row= 6, column= 0, sticky= "e")
 dbAppKeyLabel.grid(row= 7, column= 0, sticky = "e")
 dbSecretLabel.grid(row= 8, column= 0, sticky = "e")
-dbRefreshLabel.grid(row= 12, column= 0, sticky = "e")
 footerLabel.pack(padx = 0, pady = 10, anchor = "s")
 
 #endregion
@@ -258,7 +249,7 @@ airtableBaseEntry = customtkinter.CTkEntry(master=frame, placeholder_text="app..
 airtableTblEntry = customtkinter.CTkEntry(master=frame, placeholder_text="tbl...", width= 300, textvariable= airtable_table_key)
 dbAppKeyEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox App Key", width = 300, textvariable = db_app_key)
 dbSecretEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Secret", width = 300, textvariable = db_secret)
-dbRefreshEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Refresh Token", width=300, textvariable= db_refresh_key)
+#dbRefreshEntry = customtkinter.CTkEntry(master=frame, placeholder_text="Dropbox Refresh Token", width=300, textvariable= db_refresh_key)
 
 #Folder Browser for content and thumbnail directories
 dirButton1 = customtkinter.CTkButton(master=frame, text="Browse", command= cont_browse_button, width=40)
@@ -276,7 +267,7 @@ airtableBaseEntry.grid(row = 5, column = 1, sticky = "w", columnspan = 2)
 airtableTblEntry.grid(row = 6, column = 1, sticky = "w", columnspan = 2)
 dbAppKeyEntry.grid(row = 7, column = 1, sticky = "w", columnspan = 2)
 dbSecretEntry.grid(row = 8, column = 1, sticky = "w", columnspan = 2)
-dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10, columnspan = 2)
+#dbRefreshEntry.grid(row = 12, column = 1, sticky = "w", pady = 10, columnspan = 2)
 
 #endregion
 
@@ -291,8 +282,9 @@ saveConfButton.grid(row = 10, column = 1, pady = 10)
 dbRefreshButton = customtkinter.CTkButton(master=frame, text="Retrieve Dropbox Refresh Token", width=200, height=28, command=dbGetToken, state="disabled")
 dbRefreshButton.grid(row = 11, column = 1)
 
-dbStoreRefreshButton = customtkinter.CTkButton(master=frame, text="Store Refresh Token", width=200, height=28, command=storeRefreshToken, state="disabled")
-dbStoreRefreshButton.grid(row = 13, column = 1)
+#The following removed when adding pop up functionality to dropbox flow
+#dbStoreRefreshButton = customtkinter.CTkButton(master=frame, text="Store Refresh Token", width=200, height=28, command=storeRefreshToken, state="disabled")
+#dbStoreRefreshButton.grid(row = 13, column = 1)
 
 loadExistingButton = customtkinter.CTkButton(master=execFrame, text="Load Existing Data", width=200, height=28, command=loadExistingJson)
 loadExistingButton.grid(row = 0, column = 0, padx = 30, pady = 10, sticky = "E")
