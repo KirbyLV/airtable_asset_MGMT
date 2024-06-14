@@ -82,13 +82,19 @@ Just Click on _GUI.py and fill out the required fields. All Fields must be fille
 -You can use the "Browse" buttons to select:
 	-The "Content Directory" - This is where you have all of your media assets you plan on using.
  	-The "Thumbnail Output Directory" - This is the dropbox location where the app will place thumbnails to be used in the airtable display.
+
 -The "Dropbox Relative Thumbnail Path" is the thumbnail output directory AFTER your dropbox folder location. For example, if your thumbnail output location is "/Users/myname/dropbox(personal)/apps/thumbnails" then your Dropbox Relative Thumbnail Path will be "/apps/thumbnails"
+
 -The "Airtable Token" is the Airtable API token generated from the airtable developer hub
+
 -The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "appxxxxxxx"
+
 -The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "tblyyyyyyy"
+
 -The "Dropbox App Key" and "Dropbox App Secret" are the api key and secret generated within the dropbox developer hub when you created an app.
 
 After populating all fields above, click on "Save Configuration" and then "Retrieve Dropbox Refresh Token" 
+
 The "Retrieve Dropbox Refresh Token" will open a webpage prompting you to login to the appropriate dropbox, grant permissions, and will generate a key. Copy the resulting key and paste it into the popup box below, then hit "OK"
 
 <img width="273" alt="Screenshot 2024-06-14 at 10 54 53 AM" src="https://github.com/KirbyLV/airtable_asset_MGMT/assets/127134899/23deacdb-ebda-4683-996c-e4941ef8a562">
