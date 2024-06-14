@@ -115,17 +115,23 @@ def runApp():
     print("Running Application")
 
 def dbGetToken():
+    f = open(settingsPath)
+    existingData = json.load(f)
+    f.close()
     print("okay")
+    db_app_key = existingData['DROPBOX_KEY']
+    db_secret = existingData['DROPBOX_SECRET']
     try:
-        access_token, refresh_token = DropboxTokenDispenser(defaults['DROPBOX_KEY'], defaults['DROPBOX_SECRET'])
+        access_token, refresh_token = DropboxTokenDispenser(db_app_key, db_secret)
     except Exception as e :
         print("Token Generation Failed!", e)
+        tkinter.messagebox.showwarning(title="Token Generation Failed", message= e, default="ok")
     if len(access_token) != 0 and len(refresh_token) != 0:
         defaults['CONTENT_SOURCE'] = cont_dir.get().strip()
         defaults['THUMB_DEPOT'] = thumbnail_dir.get().strip()
         defaults['THUMB_DB_PATH'] = db_thumb_dir.get().strip()
-        defaults['DROPBOX_SECRET'] = db_secret.get().strip()
-        defaults['DROPBOX_KEY'] = db_app_key.get().strip()
+        defaults['DROPBOX_SECRET'] = db_secret
+        defaults['DROPBOX_KEY'] = db_app_key
         defaults['AIRTABLE_API_KEY'] = airtable_token.get().strip()
         defaults['AIRTABLE_BASE_KEY'] = airtable_base_key.get().strip()
         defaults['AIRTABLE_TABLE_NAME'] = airtable_table_key.get().strip()
@@ -135,11 +141,11 @@ def dbGetToken():
         final = open(settingsPath,'w')
         final.write(json.dumps(defaults))
         final.close()
-        runAppButton.configure(state='normal')
         return defaults
     else:
         print("No Tokens")
         tkinter.messagebox.showwarning(title="Dropbox Token Failed", message="Dropbox Token Generation Failed!", default="ok")
+        runAppButton.configure(state='disabled')
     if (
         len(cont_dir.get()) != 0 and
         len(thumbnail_dir.get()) != 0 and
@@ -148,15 +154,18 @@ def dbGetToken():
         len(airtable_base_key.get()) != 0 and
         len(airtable_table_key.get()) != 0 and
         len(db_app_key.get()) != 0 and
-        len(db_secret.get()) != 0
+        len(db_secret.get()) != 0 and
+        len(access_token.get()) > 0 and
+        len(refresh_token.get()) > 0
         ):
         runAppButton.configure(state='normal')
     else:
         tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
         print("Missing some Variables")
-    print("Access Token: ", access_token)
-    print("Refresh Token: ", refresh_token)
-    print("Refresh Token Saved!")
+        runAppButton.configure(state='disabled')
+    #print("Refresh Token: ", refresh_token)
+    #print("Refresh Token Saved!")
+    #print("Access Token: ", access_token)
 
 def loadExistingJson():
     f = open(settingsPath)
@@ -171,10 +180,7 @@ def loadExistingJson():
         airtable_table_key.set(existingData['AIRTABLE_TABLE_NAME'])
         db_app_key.set(existingData['DROPBOX_KEY'])
         db_secret.set(existingData['DROPBOX_SECRET'])
-        #db_refresh_key.set(existingData['REFRESH_KEY'])
         dbRefreshButton.configure(state='normal')
-        #if len(db_refresh_key.get()) != 0:
-            #dbStoreRefreshButton.configure(state='normal')
     except Exception as e :
         print("Cannot Load Existing Settings.", e)
         tkinter.messagebox.showwarning(title="No Existing Settings", message="No Existing Settings", default="ok")
@@ -189,9 +195,6 @@ def loadExistingJson():
         len(db_secret.get()) != 0
         ):
         runAppButton.configure(state='normal')
-
-        #else:
-            #tkinter.messagebox.showwarning(title='Dropbox Access', message='Please Run Store Refresh Token', default='ok')
     else:
         tkinter.messagebox.showwarning(title="Incomplete Values", message="Not all required variables are stored", default="ok")
         print("Missing some Variables")
