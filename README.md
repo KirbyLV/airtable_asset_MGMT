@@ -2,7 +2,7 @@
 A small pile of scripts for a content data entry workflow centered around Dropbox and Airtable APIs
 
 
-THINGS YOU NEED TO MAKE THIS TRASH FIRE FUNCTIONAL:
+## THINGS YOU NEED TO MAKE THIS TRASH FIRE FUNCTIONAL:
 
 0. Python. I Built it in 3.12 so I'd start there.
 
@@ -17,7 +17,7 @@ THINGS YOU NEED TO MAKE THIS TRASH FIRE FUNCTIONAL:
 			Read/Create Share Link Functionality.
 			
 			
-What it does:
+## What it does:
 
 1) Catalogues all of your API Keys and directories into "secrets.json" This becomes the codex through which the rest of the script finds and records media info.
 
@@ -73,36 +73,40 @@ Many thank yous to the folks that helped me smooth out the rough edges into slig
 
 
 
-HOW TO RUN IT:
+# HOW TO RUN IT:
 
-Just Click on _GUI.py and fill out the required fields. All Fields must be filled out to work. 
+1. Create your airtable with the appropriate fields listed above
 
+2. retrieve all API keys and secrets needed from both airtable and dropbox
+
+3. Just Click on _GUI.py and fill out the required fields. All Fields must be filled out to work. 
 <img width="706" alt="Screenshot 2024-06-14 at 10 45 08 AM" src="https://github.com/KirbyLV/airtable_asset_MGMT/assets/127134899/8a76a8ee-7741-48b8-a944-eb9c3dec48e2">
 
--You can use the "Browse" buttons to select:
-	-The "Content Directory" - This is where you have all of your media assets you plan on using.
- 	-The "Thumbnail Output Directory" - This is the dropbox location where the app will place thumbnails to be used in the airtable display.
+> [!IMPORTANT]
+> 3a. You can use the "Browse" buttons to select:
+> 	>The "Content Directory" - This is where you have all of your media assets you plan on using.
+>  >
+> 	>The "Thumbnail Output Directory" - This is the dropbox location where the app will place thumbnails to be used in the airtable display.
+>
+> 3b. The "Dropbox Relative Thumbnail Path" is the thumbnail output directory AFTER your dropbox folder location. For example, if your thumbnail output location is "/Users/myname/dropbox(personal)/apps/thumbnails" then your Dropbox Relative Thumbnail Path will be "/apps/thumbnails"
+>
+> 3c. The "Airtable Token" is the Airtable API token generated from the airtable developer hub
+>
+> 3d. The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "appxxxxxxx"
+>
+> 3e. The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "tblyyyyyyy"
+>
+> 3f. The "Dropbox App Key" and "Dropbox App Secret" are the api key and secret generated within the dropbox developer hub when you created an app.
 
--The "Dropbox Relative Thumbnail Path" is the thumbnail output directory AFTER your dropbox folder location. For example, if your thumbnail output location is "/Users/myname/dropbox(personal)/apps/thumbnails" then your Dropbox Relative Thumbnail Path will be "/apps/thumbnails"
-
--The "Airtable Token" is the Airtable API token generated from the airtable developer hub
-
--The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "appxxxxxxx"
-
--The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "tblyyyyyyy"
-
--The "Dropbox App Key" and "Dropbox App Secret" are the api key and secret generated within the dropbox developer hub when you created an app.
-
-After populating all fields above, click on "Save Configuration" and then "Retrieve Dropbox Refresh Token" 
-
-The "Retrieve Dropbox Refresh Token" will open a webpage prompting you to login to the appropriate dropbox, grant permissions, and will generate a key. Copy the resulting key and paste it into the popup box below, then hit "OK"
+  4. After populating all fields above, click on "Save Configuration" and then "Retrieve Dropbox Refresh Token" 
+  	4a. The "Retrieve Dropbox Refresh Token" will open a webpage prompting you to login to the appropriate dropbox, grant permissions, and will generate a key. Copy the resulting key and paste it into the popup box below, then hit "OK"
 
 <img width="273" alt="Screenshot 2024-06-14 at 10 54 53 AM" src="https://github.com/KirbyLV/airtable_asset_MGMT/assets/127134899/23deacdb-ebda-4683-996c-e4941ef8a562">
 
+5. After populating all fields, and retrieving a refresh token, you will be able to run the app. The app will comb through your content directory, generate thumbnails, compare versions, and popualte the appropriate data in the airtable you designated. 
 
-After populating all fields, and retrieving a refresh token, you will be able to run the app. The app will comb through your content directory, generate thumbnails, compare versions, and popualte the appropriate data in the airtable you designated. 
-
-If you are relaunching the app after using it before, and want to keep the same airtable and dropbox and location settings, you can click on "Load Existing Data" and all of the data previously used will load. You may have to generate a new refresh token. 
+> [!TIP]
+> If you are relaunching the app after using it before, and want to keep the same airtable and dropbox and location settings, you can click on "Load Existing Data" and all of the data previously used will load. You may have to generate a new refresh token. 
 
 Enjoy!
 
