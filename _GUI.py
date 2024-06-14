@@ -14,6 +14,7 @@ import platform
 import json
 from Dropbox_Dispenser_GUI import DropboxTokenDispenser
 import customtkinter
+import webbrowser
 #endregion
 
 # ~~~~~~~~~~~~~~~~ Window Setup
@@ -237,7 +238,7 @@ airtableBaseLabel.grid(row= 5, column= 0, sticky= "e")
 airtableTblLabel.grid(row= 6, column= 0, sticky= "e")
 dbAppKeyLabel.grid(row= 7, column= 0, sticky = "e")
 dbSecretLabel.grid(row= 8, column= 0, sticky = "e")
-footerLabel.pack(padx = 0, pady = 10, anchor = "s")
+footerLabel.grid(row = 0, column = 0)
 
 #endregion
 
@@ -295,6 +296,10 @@ loadExistingButton.grid(row = 0, column = 0, padx = 30, pady = 10, sticky = "E")
 runAppButton = customtkinter.CTkButton(master=execFrame, text="Run App", width=200, height=28, command=runApp, state="disabled")
 runAppButton.grid(row = 0, column = 1, padx = 30, pady = 10, sticky = "W")
 
+# Instructions Button
+instructionsURL = "https://github.com/KirbyLV/airtable_asset_MGMT/tree/main?tab=readme-ov-file#mgmt"
+instructionsLink = customtkinter.CTkButton(master=footerFrame, text="Instructions", width=140, height=28, command=lambda: webbrowser.open(instructionsURL, new=1))
+instructionsLink.grid(row = 0, column = 1, padx = 3, pady = 10)
 #endregion
 
 #Run App
