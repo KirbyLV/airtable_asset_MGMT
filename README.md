@@ -50,7 +50,7 @@ Otherwise you will get a "Not Found" type error from the dropbox API. (Thanks Jo
 - Duration
 - Thumbnail
 
-***If any of these are spelled differently or mismatched in your table you will get a 422 from airtable.***
+***If any of these are spelled differently or mismatched in your table you will get a 422 Error from airtable.***
 
 I would start them all [EXCEPT THUMBNAILS] as single-line text fields, but once you've done a volley, I like to change version, resolution, and folder to single-selects, and then add additional entries for the select as I go, to leverage the 
 	Built in color-coding of Airtable.
@@ -72,9 +72,33 @@ Many thank yous to the folks that helped me smooth out the rough edges into slig
 
 
 
+
 HOW TO RUN IT:
 
-Just Click on _GUI.py and it should do the rest! All Fields must be filled out to work. 
+Just Click on _GUI.py and fill out the required fields. All Fields must be filled out to work. 
+
+<img width="706" alt="Screenshot 2024-06-14 at 10 45 08 AM" src="https://github.com/KirbyLV/airtable_asset_MGMT/assets/127134899/8a76a8ee-7741-48b8-a944-eb9c3dec48e2">
+
+-You can use the "Browse" buttons to select:
+	-The "Content Directory" - This is where you have all of your media assets you plan on using.
+ 	-The "Thumbnail Output Directory" - This is the dropbox location where the app will place thumbnails to be used in the airtable display.
+-The "Dropbox Relative Thumbnail Path" is the thumbnail output directory AFTER your dropbox folder location. For example, if your thumbnail output location is "/Users/myname/dropbox(personal)/apps/thumbnails" then your Dropbox Relative Thumbnail Path will be "/apps/thumbnails"
+-The "Airtable Token" is the Airtable API token generated from the airtable developer hub
+-The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "appxxxxxxx"
+-The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "tblyyyyyyy"
+-The "Dropbox App Key" and "Dropbox App Secret" are the api key and secret generated within the dropbox developer hub when you created an app.
+
+After populating all fields above, click on "Save Configuration" and then "Retrieve Dropbox Refresh Token" 
+The "Retrieve Dropbox Refresh Token" will open a webpage prompting you to login to the appropriate dropbox, grant permissions, and will generate a key. Copy the resulting key and paste it into the popup box below, then hit "OK"
+
+<img width="273" alt="Screenshot 2024-06-14 at 10 54 53 AM" src="https://github.com/KirbyLV/airtable_asset_MGMT/assets/127134899/23deacdb-ebda-4683-996c-e4941ef8a562">
+
+
+After populating all fields, and retrieving a refresh token, you will be able to run the app. The app will comb through your content directory, generate thumbnails, compare versions, and popualte the appropriate data in the airtable you designated. 
+
+If you are relaunching the app after using it before, and want to keep the same airtable and dropbox and location settings, you can click on "Load Existing Data" and all of the data previously used will load. You may have to generate a new refresh token. 
+
+Enjoy!
 
 THIS IS A WORK IN PROGRESS!
 
