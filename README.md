@@ -92,9 +92,9 @@ Many thank yous to the folks that helped me smooth out the rough edges into slig
 >
 > 3c. The "Airtable Token" is the Airtable API token generated from the airtable developer hub
 >
-> 3d. The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "appxxxxxxx"
+> 3d. The "Airtable Base Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "app". For example, within `https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide` the "Base Key" is "appxxxxxxx"
 >
-> 3e. The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within "https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide" the "Base Key" is "tblyyyyyyy"
+> 3e. The "Airtable Table Key" can be found in the URL of the airtable you are using as your content tracker. Look in the URL address bar of the airtbale web page when you have the table open and find the section starting with "tbl". For example, within `https://airtable.com/appxxxxxxx/tblyyyyyyy/viwzzzzzzz?blocks=hide` the "Base Key" is "tblyyyyyyy"
 >
 > 3f. The "Dropbox App Key" and "Dropbox App Secret" are the api key and secret generated within the dropbox developer hub when you created an app.
 
